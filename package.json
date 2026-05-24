@@ -9,9 +9,9 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["ai", "testing", "automation", "playwright", "openai", "anthropic"],
+  "author": "Muhammad Taqi",
+  "license": "MIT",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
