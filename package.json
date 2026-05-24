@@ -1,5 +1,5 @@
 {
-  "name": "gremlin-qa",
+  "name": "qlaw",
   "version": "0.1.0",
   "description": "AI testers that think like users. Your users will break it anyway. Gremlin finds it first.",
   "main": "index.js",
@@ -21,7 +21,7 @@
   },
   "type": "module",
   "bin": {
-    "gremlin": "./dist/cli/index.js"
+    "qlaw": "./dist/cli/index.js"
   },
   "files": [
     "dist"

@@ -16,7 +16,7 @@ function isValidPersona(config: unknown): config is PersonaConfig {
 }
 
 async function loadCustomPersonas(): Promise<PersonaConfig[]> {
-  const dir = path.resolve(process.cwd(), '.gremlin/agents/')
+  const dir = path.resolve(process.cwd(), '.qlaw/agents/')
   if (!fs.existsSync(dir)) return []
 
   const result: PersonaConfig[] = []
@@ -57,7 +57,7 @@ export async function loadPersonas(agentFlag?: string): Promise<PersonaConfig[]>
         return requested.map(name => {
             const found = allPersonas.find(p => p.name.toLowerCase() === name)
             if (!found) throw new Error(
-                `Unknown agent "${name}". Run 'gremlin agents --list' to see available agents.`
+                `Unknown agent "${name}". Run 'qlaw agents --list' to see available agents.`
             )
             return found
         })
