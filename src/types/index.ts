@@ -1,46 +1,49 @@
 //  Gremlin — Types
 
 // Actions 
-export type ActionType = | 'open' | 'click' | 'type' | 'scroll' | 'select' | 'hover' | 'press'| 'wait'| 'done' | 'stuck'    
+export type ActionType = | 'open' | 'click' | 'type' | 'scroll' | 'select' | 'hover' | 'press' | 'wait' | 'done' | 'stuck'
 
 export interface Action {
-  type:       ActionType
-  target?:    string   // element description e.g. "Submit button"
-  value?:     string   // text to type, url, key to press, scroll direction
-  reasoning:  string   // why this action — one sentence
-  finding?:   Finding  // bug or issue spotted at this step
+  type: ActionType
+  target?: string   // element description e.g. "Submit button"
+  value?: string   // text to type, url, key to press, scroll direction
+  reasoning: string   // why this action — one sentence
+  finding?: Finding  // bug or issue spotted at this step
 }
 
 // Findings 
 export interface Finding {
-  severity:    'critical' | 'warning' | 'info'
+  severity: 'critical' | 'warning' | 'info'
   description: string
-  element?:    string
+  element?: string
   screenshot?: string  // path - attached by runner
-  step?:       number
+  step?: number
 }
 
 // Page State 
 export interface PageState {
-  url?:       string   // undefined for native apps
-  title?:     string
-  tree:       string   // extracted UI elements as text
-  timestamp:  number
+  url?: string   // undefined for native apps
+  title?: string
+  tree: string   // extracted UI elements as text
+  timestamp: number
 }
 
 // History 
 export interface HistoryEntry {
-  step:      number
+  step: number
   pageState: PageState
-  action:    Action
+  action: Action
 }
 
 // User Persona for Ai Tester
 export interface PersonaConfig {
-  name:        string
+  name: string
   description: string
-  prompt:      string 
-  maxSteps:    number
+  systemPrompt: string
+  patience: number   // 1-10: how long before giving up
+  aggression: number   // 1-10: how destructive
+  readingBehavior: 'thorough' | 'skim' | 'skip'
+  maxSteps?: number   // optional override, derived from patience if not set
 }
 
 // LLM Provider Config
@@ -48,42 +51,42 @@ export type ProviderName = | 'groq' | 'openai' | 'anthropic' | 'gemini' | 'openr
 
 export interface ProviderConfig {
   provider: ProviderName
-  apiKey?:  string
-  model?:   string
+  apiKey?: string
+  model?: string
   baseURL?: string
 }
 
 export interface LLMInput {
-  system:   string
+  system: string
   messages: LLMMessage[]
 }
 
 export interface LLMMessage {
-  role:    'user' | 'assistant'
+  role: 'user' | 'assistant'
   content: string
 }
 
 export interface LLMOutput {
-  content:  string
+  content: string
   provider: ProviderName
-  model:    string
+  model: string
 }
 
 // Gremlin Config (saved at ~/.gremlin/gremlin.config.json) 
 export interface GremlinConfig {
-  primary:   ProviderConfig
+  primary: ProviderConfig
   fallback?: ProviderConfig
 }
 
 // Run Result 
 export interface RunResult {
-  persona:     string
-  url:         string
-  goal:        string
-  steps:       number
-  findings:    Finding[]
+  persona: string
+  url: string
+  goal: string
+  steps: number
+  findings: Finding[]
   goalReached: boolean
-  stuck:       boolean
-  duration:    number      // ms
-  history:     HistoryEntry[]
+  stuck: boolean
+  duration: number      // ms
+  history: HistoryEntry[]
 }
