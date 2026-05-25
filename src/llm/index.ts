@@ -62,7 +62,7 @@ export class LLM {
                 String(err).toLowerCase().includes('rate')
 
             if (isRateLimit && this.fallbackClient && this.fallbackConfig) {
-                console.warn(`  👾 ${this.primaryConfig.provider} rate limited — falling back to ${this.fallbackConfig.provider}`)
+                console.warn(`👾 ${this.primaryConfig.provider} rate limited — falling back to ${this.fallbackConfig.provider}`)
                 return await this.callProvider(this.fallbackClient, this.fallbackConfig, input)
             }
 
@@ -82,7 +82,11 @@ export class LLM {
             const res = await client.messages.create({
                 model,
                 max_tokens: 1024,
-                system: input.system,
+                system: [{
+                    type: 'text',
+                    text: input.system,
+                    cache_control: {type: 'ephemeral'}
+                }],
                 messages: input.messages.map(m => ({
                     role: m.role as 'user' | 'assistant',
                     content: m.content,

@@ -23,6 +23,7 @@ export class Director {
 
 PERSONA: ${this.persona.name}
 DESCRIPTION: ${this.persona.description}
+GOAL: ${this.goal}
 
 BEHAVIOR:
 ${this.persona.systemPrompt}
@@ -71,8 +72,6 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
             ).join('\n')
 
         return [
-            `GOAL: ${this.goal}`,
-            '',
             header,
             '',
             '── PAGE ELEMENTS ──────────────────────────',
