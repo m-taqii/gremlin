@@ -6,7 +6,7 @@ export class Extractor {
     const url   = page.url()
     const title = await page.title().catch(() => undefined)
 
-    // runs inside the browser — queries DOM directly
+    // runs inside the browser - queries DOM directly
     const tree = await page.evaluate(() => {
       const selector = [
         'button', 'a[href]', 'input', 'select', 'textarea',
@@ -17,11 +17,11 @@ export class Extractor {
 
       return Array.from(document.querySelectorAll(selector))
         .filter(el => {
-          // visible only — has width and height
+          // visible only
           const rect = el.getBoundingClientRect()
           return rect.width > 0 && rect.height > 0
         })
-        .slice(0, 60)  // cap at 60 — enough for any page
+        .slice(0, 60)  // cap at 60
         .map((el, i) => {
           const tag   = el.tagName.toLowerCase()
           const role  = el.getAttribute('role') ?? tag
