@@ -7,6 +7,8 @@
 
 > Claw through bugs before your users do.
 
+![Crawlix demo](https://github.com/user-attachments/assets/d7c9e046-2c84-4cc8-9549-81f2639cb6d1)
+
 Crawlix is an open-source autonomous QA agent that spawns AI-powered user personas and unleashes them on your product. Each persona navigates independently, makes real decisions, hits dead ends, and finds bugs - without you writing a single test script.
 
 ---
