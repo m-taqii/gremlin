@@ -13,7 +13,7 @@ export interface Action {
 
 export interface ActionResult {
   success: boolean
-  error?:  string
+  error?: string
 }
 
 // Findings 
@@ -81,6 +81,7 @@ export interface LLMOutput {
 export interface QlawConfig {
   primary: ProviderConfig
   fallback?: ProviderConfig
+  roundRobin?: ProviderConfig[]
 }
 
 // Run Result 

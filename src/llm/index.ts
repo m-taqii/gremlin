@@ -42,11 +42,19 @@ export class LLM {
 
     private client: OpenAI | Anthropic;
     private fallbackClient?: OpenAI | Anthropic | undefined;
+    private roundRobinProviders: ProviderConfig[] = [];
+    private roundRobinClients: (OpenAI | Anthropic)[] = [];
+    private roundRobinIndex: number = 0;
+    private useRoundRobin: boolean = false;
 
-    constructor(primaryConfig: ProviderConfig, fallbackConfig?: ProviderConfig) {
+    constructor(primaryConfig: ProviderConfig, fallbackConfig?: ProviderConfig, roundRobin?: ProviderConfig[]) {
         this.primaryConfig = primaryConfig;
         this.fallbackConfig = fallbackConfig;
-
+        if (roundRobin && roundRobin.length > 0) {
+            this.useRoundRobin = true
+            this.roundRobinProviders = roundRobin
+            this.roundRobinClients = roundRobin.map(c => createClient(c))
+        }
         this.client = createClient(primaryConfig)
         if (fallbackConfig) {
             this.fallbackClient = createClient(fallbackConfig)
@@ -54,6 +62,43 @@ export class LLM {
     }
 
     async complete(input: LLMInput): Promise<LLMOutput> {
+        if (this.useRoundRobin && this.roundRobinProviders.length > 0) {
+
+            // try current provider
+            const index = this.roundRobinIndex % this.roundRobinProviders.length
+            const config = this.roundRobinProviders[index]!
+            const client = this.roundRobinClients[index]!
+            this.roundRobinIndex++
+
+            try {
+                return await this.callProvider(client, config, input)
+            } catch (err: unknown) {
+                const isRateLimit =
+                    (err as { status?: number })?.status === 429 ||
+                    String(err).toLowerCase().includes('rate')
+
+                if (isRateLimit) {
+                    // remove current provider from available pool temporarily
+                    const available = this.roundRobinProviders
+                        .map((p, i) => ({ p, i }))
+                        .filter(({ i }) => i !== index)
+
+                    if (available.length === 0) throw err
+
+                    // pick randomly from remaining
+                    const random = available[Math.floor(Math.random() * available.length)]!
+                    console.warn(`👾 ${config.provider} rate limited — randomly switching to ${this.roundRobinProviders[random.i]!.provider}`)
+
+                    return await this.callProvider(
+                        this.roundRobinClients[random.i]!,
+                        this.roundRobinProviders[random.i]!,
+                        input
+                    )
+                }
+
+                throw err
+            }
+        }
         try {
             return await this.callProvider(this.client, this.primaryConfig, input)
         } catch (err: unknown) {
@@ -85,7 +130,7 @@ export class LLM {
                 system: [{
                     type: 'text',
                     text: input.system,
-                    cache_control: {type: 'ephemeral'}
+                    cache_control: { type: 'ephemeral' }
                 }],
                 messages: input.messages.map(m => ({
                     role: m.role as 'user' | 'assistant',

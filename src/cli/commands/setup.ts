@@ -73,10 +73,30 @@ export const setupCommand = new Command('setup')
             fallback = await setupProvider('fallback')
         }
 
+        // after fallback setup
+        const wantsRoundRobin = await confirm({
+            message: 'Add round robin providers to spread load across multiple providers?',
+            default: false,
+        })
+
+        const roundRobin: ProviderConfig[] = []
+
+        if (wantsRoundRobin) {
+            console.log('\n  Add providers one by one. Press N when done.\n')
+
+            let addMore = true
+            while (addMore) {
+                const provider = await setupProvider(`round robin #${roundRobin.length + 1}`)
+                roundRobin.push(provider)
+                addMore = await confirm({ message: 'Add another provider?', default: false })
+            }
+        }
+
         // build config
         const qlawConfig: QlawConfig = {
             primary,
             ...(fallback && { fallback }),
+            ...(roundRobin.length > 0 && { roundRobin }),
         }
 
         // save to ~/.qlaw/qlaw.config.json

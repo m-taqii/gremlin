@@ -17,9 +17,13 @@ export const runCommand = new Command('run')
     .option('--steps <number>', 'Max steps per agent', '25')
     .option('--concurrency <number>', 'Agents running in parallel', '2')
     .option('--headed', 'Run browser in headed mode')
+    .option('--round-robin', 'Spread load across multiple providers to avoid rate limiting')
     .action(async (options) => {
         const config = getConfig();
-        const llm: LLM = new LLM(config.primary, config.fallback);
+        if (options.roundRobin && !config.roundRobin?.length) {
+            console.warn(chalk.yellow('  ⚠ --round-robin flag used but no round robin providers configured. Run qlaw setup to add them.'))
+        }
+        const llm: LLM = new LLM(config.primary, config.fallback, options.roundRobin ? config.roundRobin : undefined);
 
         const { url, goal, agent, steps, concurrency, headed } = options;
 
