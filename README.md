@@ -2,16 +2,16 @@
 
 > Claw through bugs before your users do.
 
-Qlaw is an open-source autonomous QA agent that spawns AI-powered user personas and unleashes them on your product. Each persona navigates independently, makes real decisions, hits dead ends, and finds bugs — without you writing a single test script.
+Qlaw is an open-source autonomous QA agent that spawns AI-powered user personas and unleashes them on your product. Each persona navigates independently, makes real decisions, hits dead ends, and finds bugs - without you writing a single test script.
 
 ---
 
 ## How it works
 
-Qlaw spawns multiple AI agents simultaneously. Each one opens your app in a real browser, reads the UI, and navigates toward the goal exactly as that type of user would behave — including their mistakes, impatience, and confusion. When they find something broken, confusing, or unexpected — they report it.
+Qlaw spawns multiple AI agents simultaneously. Each one opens your app in a real browser, reads the UI, and navigates toward the goal exactly as that type of user would behave - including their mistakes, impatience, and confusion. When they find something broken, confusing, or unexpected - they report it.
 
 ```
-  👾 Qlaw — Claw through bugs before your users do.
+  👾 Qlaw - Claw through bugs before your users do.
 
   target   → http://localhost:3000/
   goal     → Check the landing page is everything working fine
@@ -25,7 +25,7 @@ Qlaw spawns multiple AI agents simultaneously. Each one opens your app in a real
   ~ Slow Network      no findings                4 steps  · 27.7s
 
   ╭──────────────────────────────────────╮
-  │ 👾 Qlaw — run complete               │
+  │ 👾 Qlaw - run complete               │
   │                                      │
   │   1 critical  106 warnings  1 info   │
   │                                      │
@@ -49,7 +49,7 @@ npm install -g qlaw
 
 ## Setup
 
-Run once. Qlaw asks for your LLM provider and API key — remembers it forever.
+Run once. Qlaw asks for your LLM provider and API key - remembers it forever.
 
 ```bash
 qlaw setup
@@ -79,7 +79,7 @@ qlaw run --url https://myapp.com --goal "complete the signup flow"
 # run specific agents only
 qlaw run --url https://myapp.com --goal "login" --agent first-timer,adversarial
 
-# run headed — watch agents navigate in real browser
+# run headed - watch agents navigate in real browser
 qlaw run --url https://myapp.com --goal "checkout" --headed
 
 # control steps and concurrency
@@ -145,11 +145,15 @@ Qlaw reports three severity levels:
 
 Traditional QA tools require you to write and maintain selectors, flows, and assertions. They break when your UI changes. They only test paths you already thought of.
 
-Qlaw doesn't know your app. That's the point. It finds the paths you didn't think of — the ones your real users will find on their own.
+Qlaw doesn't know your app. That's the point. It finds the paths you didn't think of - the ones your real users will find on their own.
 
 ---
 
 ## Contributing
+
+Contributions are welcome - bug fixes, new agents, adapter improvements, or anything that makes it better.
+
+### Getting started
 
 ```bash
 git clone https://github.com/m-taqii/qlaw
@@ -158,7 +162,23 @@ pnpm install
 pnpm tsx src/cli/index.ts run --url https://example.com --goal "find the more information link"
 ```
 
+### Ways to contribute
 
+- **Add a built-in agent** - add a persona to `src/personas/index.ts` and open a PR
+- **Fix a bug** - open an issue first, then a PR with the fix
+- **Improve element resolution** - `src/adapters/web.ts` `resolve()` method always needs work
+- **Add an adapter** - API testing, mobile, desktop - see `src/adapters/base.ts` for the interface
+- **Improve the report** - `src/core/reporter.ts` - better prompts, better structure
+
+### Before opening a PR
+
+- Run `pnpm exec tsc --noEmit` - must be clean
+- Test against a real URL
+- Keep it focused - one thing per PR
+
+### Found a bug?
+
+Open an issue with the URL you were testing, the goal you gave, and the error output.
 
 ---
 
