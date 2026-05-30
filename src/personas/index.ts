@@ -95,15 +95,18 @@ every slow response as at least a warning-level finding.`,
 // Accepts either a persona name string or a full PersonaConfig
 export function resolvePersona(input: PersonaConfig | string): PersonaConfig {
   if (typeof input === 'string') {
-    const persona = PERSONAS[input.toLowerCase()]
-    if (!persona) {
-      const available = Object.keys(PERSONAS).join(', ')
-      throw new Error(
-        `Unknown persona "${input}". Available: ${available}\n` +
-        `Or pass a full PersonaConfig object.`
-      )
-    }
-    return persona
+    // try direct key match first
+    const byKey = PERSONAS[input.toLowerCase()]
+    if (byKey) return byKey
+
+    // try name match with normalization
+    const byName = Object.values(PERSONAS).find(p => 
+      p.name.toLowerCase().replace(/\s+/g, '-') === input.toLowerCase()
+    )
+    if (byName) return byName
+
+    const available = Object.keys(PERSONAS).join(', ')
+    throw new Error(`Unknown persona "${input}". Available: ${available}`)
   }
   return input
 }

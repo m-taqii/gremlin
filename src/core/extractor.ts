@@ -29,7 +29,7 @@ export class Extractor {
             el.getAttribute('aria-label') ??
             el.getAttribute('placeholder') ??
             el.getAttribute('title') ??
-            el.textContent?.trim().slice(0, 60) ??
+            el.textContent?.trim().replace(/\s+/g, ' ').slice(0, 60) ??
             ''
           ).trim()
           const type = el.getAttribute('type') ?? ''

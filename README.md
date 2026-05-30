@@ -1,5 +1,10 @@
 # 👾 Crawlix
 
+[![npm version](https://badge.fury.io/js/crawlix.svg)](https://www.npmjs.com/package/crawlix)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/m-taqii/crawlix/pulls)
+
 > Claw through bugs before your users do.
 
 Crawlix is an open-source autonomous QA agent that spawns AI-powered user personas and unleashes them on your product. Each persona navigates independently, makes real decisions, hits dead ends, and finds bugs - without you writing a single test script.
@@ -24,15 +29,17 @@ Crawlix spawns multiple AI agents simultaneously. Each one opens your app in a r
   ~ Non-Native        106 warnings · 1 info      10 steps · 27.5s
   ~ Slow Network      no findings                4 steps  · 27.7s
 
-  ╭──────────────────────────────────────╮
-  │ 👾 Crawlix - run complete               │
-  │                                      │
-  │   1 critical  106 warnings  1 info   │
-  │                                      │
-  │   0 passed  0 stuck  6 incomplete    │
-  │                                      │
-  │   total time → 539.8s                │
-  ╰──────────────────────────────────────╯
+  ╭──────────────────────────────────────────╮
+  │  👾 Crawlix - run complete               │
+  │                                          │
+  │    1 critical  106 warnings  1 info      │
+  │                                          │
+  │    0 passed  0 stuck  6 incomplete       │
+  │                                          │
+  │    total time → 539.8s                   │
+  ╰──────────────────────────────────────────╯
+
+  📋 report saved → ./crawlix-reports/report-2026-05-24.md
 ```
 
 No test scripts. No selectors. No maintenance.
@@ -57,14 +64,15 @@ crawlix setup
 
 Supported providers:
 
-- Groq
-- Gemini
+
+- Groq 
+- Gemini 
 - Cerebras
 - Mistral
 - OpenRouter
-- Ollama
+- Ollama 
 - OpenAI
-- Anthropic
+- Anthropic 
 
 Config is saved to `~/.crawlix/crawlix.config.json`.
 
@@ -76,17 +84,26 @@ Config is saved to `~/.crawlix/crawlix.config.json`.
 # run all agents against your app
 crawlix run --url https://myapp.com --goal "complete the signup flow"
 
-# run specific agents only
+# run specific agent(s) only - comma separated
 crawlix run --url https://myapp.com --goal "login" --agent first-timer,adversarial
 
 # run headed - watch agents navigate in real browser
 crawlix run --url https://myapp.com --goal "checkout" --headed
 
-# control steps and concurrency
-crawlix run --url https://myapp.com --goal "find pricing" --steps 15 --concurrency 1
+# control max steps per agent
+crawlix run --url https://myapp.com --goal "find pricing" --steps 15
+
+# control how many agents run in parallel
+crawlix run --url https://myapp.com --goal "test signup" --concurrency 1
+
+# use round robin across multiple providers to avoid rate limiting
+crawlix run --url https://myapp.com --goal "test signup" --round-robin
 
 # list all available agents
 crawlix agents
+
+# reconfigure your LLM provider
+crawlix setup
 ```
 
 ---
@@ -126,6 +143,19 @@ Run a specific custom agent:
 ```bash
 crawlix run --url https://myapp.com --goal "book an appointment" --agent doctor
 ```
+
+---
+
+## Reports
+
+After every run, Crawlix generates an AI-powered markdown report saved to `./crawlix-reports/`.
+
+The report includes:
+- Executive summary
+- Critical issues with suggested fixes
+- Warning patterns across agents
+- Agent performance breakdown
+- Prioritized recommendations
 
 ---
 

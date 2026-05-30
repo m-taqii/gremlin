@@ -73,9 +73,14 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
                 `→ ${e.action.reasoning}` +
                 (e.action.finding ? ` ⚠ ${e.action.finding.severity.toUpperCase()}: ${e.action.finding.description}` : '')
             ).join('\n')
+        const lastAction = history.at(-1)
+        const lastActionHint = lastAction?.action.type === 'type'
+            ? `\nHINT: You just typed "${lastAction.action.value}" into "${lastAction.action.target}" — you must now submit by pressing Enter or clicking the submit/search button.`
+            : ''
 
         return [
             header,
+            lastActionHint,
             '',
             '── PAGE ELEMENTS ──────────────────────────',
             pageState.tree,
@@ -100,8 +105,8 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
         } catch {
             throw new Error(`Crawlix: received non-JSON response:\n${raw}`)
         }
-        if(Array.isArray(parsed)) {
-           parsed = parsed[0] as Record<string, unknown>
+        if (Array.isArray(parsed)) {
+            parsed = parsed[0] as Record<string, unknown>
         }
         if (!parsed['type'] || typeof parsed['type'] !== 'string') {
             throw new Error(`Crawlix: missing "type" in response:\n${raw}`)

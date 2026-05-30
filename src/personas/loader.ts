@@ -55,7 +55,9 @@ export async function loadPersonas(agentFlag?: string): Promise<PersonaConfig[]>
     ]
 
     return requested.map(name => {
-      const found = allPersonas.find(p => p.name.toLowerCase() === name)
+      const found = allPersonas.find(p =>
+        p.name.toLowerCase().replace(/\s+/g, '-') === name.toLowerCase()
+      )
       if (!found) throw new Error(
         `Unknown agent "${name}". Run 'crawlix agents --list' to see available agents.`
       )
