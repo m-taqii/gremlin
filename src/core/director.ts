@@ -97,7 +97,9 @@ Set "type" to "stuck" only after ${this.persona.patience <= 3 ? '2' : this.perso
         } catch {
             throw new Error(`Qlaw: received non-JSON response:\n${raw}`)
         }
-
+        if(Array.isArray(parsed)) {
+           parsed = parsed[0] as Record<string, unknown>
+        }
         if (!parsed['type'] || typeof parsed['type'] !== 'string') {
             throw new Error(`Qlaw: missing "type" in response:\n${raw}`)
         }
